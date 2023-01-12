@@ -1,4 +1,3 @@
-//require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -34,11 +33,8 @@ let short = 1
 let arr = []
 app.post('/api/shorturl', function(req, res){
     original = req.body.url
-    //let url = new URL(original)
     arr.push(original)
-    console.log(arr)
     if(stringIsAValidUrl(original)){
-      //res.json({requestBody: req.body});
       let url = new URL(original)
       if(url.protocol ==='ftp:'){
         res.json({error: 'Invalid URL'})
@@ -54,10 +50,6 @@ app.post('/api/shorturl', function(req, res){
 }); 
 
 app.get('/api/shorturl/:shortURL', function(req, res){
-  //res.send(req.params)
-  //console.log(req.params.shortURL)
-  //res.redirect(original)
-  //console.log(arr[(req.params.shortURL-1)])
   res.redirect(arr[parseInt(req.params.shortURL)-1])
 })
 
