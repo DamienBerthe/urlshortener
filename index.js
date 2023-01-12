@@ -1,10 +1,10 @@
-require('dotenv').config();
+//require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
-
-// Basic Configuration
-const port = process.env.PORT || 3000;
+const bodyParser = require('body-parser')
+app.use(express.json())
+const url = require('url')
 
 app.use(cors());
 
@@ -14,11 +14,40 @@ app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.listen(port, function() {
-  console.log(`Listening on port ${port}`);
-});
+const stringIsAValidUrl = (s) => {
+  try {
+    new URL(s);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+let original = ''
+let short = 1
+let arr = []
+app.post('/api/shorturl', function(req, res){
+    original = req.body.url
+    arr.push(original)
+    console.log(arr)
+    if(stringIsAValidUrl(original)){
+      //res.json({requestBody: req.body});
+      res.json({original_url: original, short_url:arr.indexOf(original)+1})
+    }
+    else{
+      res.json({error: 'invalid url'})
+    }
+}); 
+
+app.get('/api/shorturl/:shortURL', function(req, res){
+  //res.send(req.params)
+  //console.log(req.params.shortURL)
+  //res.redirect(original)
+  //console.log(arr[(req.params.shortURL-1)])
+  res.redirect(arr[parseInt(req.params.shortURL)-1])
+})
+
+app.listen(10000)
