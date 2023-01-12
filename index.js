@@ -38,7 +38,7 @@ app.post('/api/shorturl', function(req, res){
       res.json({original_url: original, short_url:arr.indexOf(original)+1})
     }
     else{
-      res.json({error: 'invalid url'})
+      res.json({error: 'Invalid URL'})
     }
 }); 
 
