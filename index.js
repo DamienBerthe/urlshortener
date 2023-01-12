@@ -20,6 +20,9 @@ app.use(express.json());
 const stringIsAValidUrl = (s) => {
   try {
     new URL(s);
+    if(s.protocol === 'ftp:'){
+      return false
+    }
     return true;
   } catch (err) {
     return false;
@@ -31,11 +34,19 @@ let short = 1
 let arr = []
 app.post('/api/shorturl', function(req, res){
     original = req.body.url
+    //let url = new URL(original)
     arr.push(original)
     console.log(arr)
     if(stringIsAValidUrl(original)){
       //res.json({requestBody: req.body});
-      res.json({original_url: original, short_url:arr.indexOf(original)+1})
+      let url = new URL(original)
+      if(url.protocol ==='ftp:'){
+        res.json({error: 'Invalid URL'})
+      }
+      else{
+        res.json({original_url: original, short_url:arr.indexOf(original)+1})
+      }
+      
     }
     else{
       res.json({error: 'Invalid URL'})
